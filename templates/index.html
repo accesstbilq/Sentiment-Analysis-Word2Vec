@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis by Word2Vec</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 600px;
+            max-width: 90%;
+            margin-top: -50px;
+            transform: translateY(-10%);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        select {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .model-result {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+        .model-result h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .model-result p {
+            font-weight: bold;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis by Word2Vec</h1>
+        <form method="POST">
+            <textarea name="text" placeholder="Enter text for sentiment analysis">{{ input_text }}</textarea>
+            
+            <div class="input-group">
+                <select name="model" required>
+                    <option value="">Select Model</option>
+                    <option value="svm" {{ 'selected' if selected_model == 'svm' else '' }}>SVM Model</option>
+                    <option value="rf" {{ 'selected' if selected_model == 'rf' else '' }}>Random Forest Model</option>
+                    <option value="lr" {{ 'selected' if selected_model == 'lr' else '' }}>Logistic Regression Model</option>
+                    <option value="nb" {{ 'selected' if selected_model == 'nb' else '' }}>Naive Bayes Model</option>
+                    <option value="all" {{ 'selected' if selected_model == 'all' else '' }}>All Models</option>
+                </select>
+                <input type="submit" value="Analyze Sentiment">
+            </div>
+        </form>
+
+        <!-- {% if result %}
+        <div class="results">
+            {% for model, sentiment in result.items() %}
+            <div class="model-result">
+                <h3>{{ model|upper }} Model</h3>
+                <p>{{ sentiment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %} -->
+
+
+        <!-- {% if result %}
+        <div class="results">
+            {% for model, sentiment in result.items() %}
+            <div class="model-result">
+                <h3>
+                    {% if model == 'rf' %}
+                        Random Forest
+                    {% elif model == 'svm' %}
+                        SVM
+                    {% elif model == 'lr' %}
+                        Logistic Regression
+                    {% elif model == 'nb' %}
+                        Naive Bayes
+                    {% else %}
+                        {{ model|upper }} 
+                    {% endif %}
+                </h3>
+                <p>{{ sentiment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %} -->
+
+        {% if result %}
+        <div class="results">
+            {% for model, sentiment in result.items() %}
+            <div class="model-result">
+                <h3>
+                    {% if model == 'rf' %}
+                        Random Forest Model
+                    {% elif model == 'svm' %}
+                        SVM Model
+                    {% elif model == 'lr' %}
+                        Logistic Regression Model
+                    {% elif model == 'nb' %}
+                        Naive Bayes Model
+                    {% else %}
+                        {{ model|upper }} Model
+                    {% endif %}
+                </h3>
+                <p>{{ sentiment }}</p>
+                <p>Accuracy: {{ model_accuracies[model] * 100 }}%</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %} 
+    </div>
+</body>
+</html>
